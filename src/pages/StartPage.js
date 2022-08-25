@@ -9,7 +9,7 @@ import themeContext from '../components/theme/themeContext'
 const StartPage = () => {
 
   const theme = useContext(themeContext)
-  const [pickVal, setpickVal] = useState(1)
+  const [pickVal, setpickVal] = useState(0)
   const [users, setUsers] = useState([])
   const [refreshing, setRefreshing] = useState(false)
   const [mode, setMode] = useState(true)

@@ -85,7 +85,7 @@ export default function App() {
         <View style={styles.rootContainer}
           onLayout={onLayoutRootView}
         >
-          <StatusBar style="auto" />
+
 
           <SafeAreaView style={styles.rootContainer}>
             <StartPage />
