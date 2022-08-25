@@ -5,7 +5,9 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, ImageBackground, SafeAreaView } from 'react-native';
 // https://www.npmjs.com/package/@expo-google-fonts/ubuntu
 import StartPage from './src/pages/StartPage'
-import EnterMobilePage from './src/pages/LoginPage'
+import { EventRegister } from 'react-native-event-listeners'
+import themeContext from "./src/components/theme/themeContext"
+import theme from "./src/components/theme/theme"
 
 /*
     Ubuntu_300Light,
@@ -26,12 +28,23 @@ let customFonts = {
   'Ubuntu_400Regular': require('./assets/fonts/Ubuntu-Regular.ttf'),
   'Ubuntu_400Regular_Italic': require('./assets/fonts/Ubuntu-Italic.ttf'),
   'Ubuntu_300Light': require('./assets/fonts/Ubuntu-Light.ttf'),
-  'Ubuntu_300Light_Italic': require('./assets/fonts/Ubuntu-LightItalic.ttf'),  
+  'Ubuntu_300Light_Italic': require('./assets/fonts/Ubuntu-LightItalic.ttf'),
 };
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-  
+  const [mode, setMode] = useState(false)
+
   useEffect(() => {
+    let eventListener = EventRegister.addEventListener("changeTheme", (data) => {
+      setMode(data)
+    })
+    return () => {
+      EventRegister.removeEventListener(eventListener)
+    }
+  })
+
+  useEffect(() => {
+
     async function prepare() {
       try {
         // Keep the splash screen visible while we fetch resources
@@ -52,6 +65,7 @@ export default function App() {
     prepare();
   }, []);
 
+
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       // This tells the splash screen to hide immediately! If we call this after
@@ -66,27 +80,25 @@ export default function App() {
   if (!appIsReady) {
     return null
   } else {
-      return (
-        <View style={styles.rootContainer} 
+    return (
+      <themeContext.Provider value={mode === true ? theme.dark : theme.light}>
+        <View style={styles.rootContainer}
           onLayout={onLayoutRootView}
-          >
+        >
           <StatusBar style="auto" />
-          <ImageBackground 
-            source={require("./assets/images/background.png")}
-            resizeMode='cover'
-            style={styles.rootContainer}
-          >
-            <SafeAreaView style={styles.rootContainer}>
-                <StartPage />               
-            </SafeAreaView>
-          </ImageBackground>
+
+          <SafeAreaView style={styles.rootContainer}>
+            <StartPage />
+          </SafeAreaView>
+
         </View>
-      )
+      </themeContext.Provider>
+    )
   }
 }
 
 const styles = StyleSheet.create({
   rootContainer: {
-    flex: 1,    
+    flex: 1,
   },
 });
